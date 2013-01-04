@@ -3,22 +3,72 @@ import fnmatch
 import getopt
 import os
 import re
+import platform
 import pprint
 from cStringIO import StringIO
 import subprocess
 import sys
 import uuid
 
+def print_help():
+    print "Script for resolving synchronization conflicts of EncFS-encrypted files"
+    print "within a Dropbox folder."
+    print ""
+    print "Usage: %s --dropbox-dir <DIR>" % (os.path.basename(__file__),)
+    print "       --encfs-mount-dir <DIR> [--encfs-cmd <CMD>]"
+    print "       [--encfs-password|-p <PASSWORD>] [--verbose]"
+
+    sys.exit(2)
+
 def main(argv):
 
-    if len(argv) < 2:
-        print '    C:\\Dropbox\\EncFS P:\\'
-        sys.exit(1)
+    # Sensible defaults.
+    fVerbose = False
 
-    sEncFsCmd  = 'encfsctl.exe' ## @todo: Add suffix detection based on OS.
-    sEncFsPwd  = ''
-    sEncFSPath = sys.argv[1]
-    sEncFSMount = sys.argv[2]
+    sSystem = platform.system()
+    if sSystem == "Linux":
+        sEncFsCmd  = 'encfsctl'
+    elif sSystem == "Windows":
+        sEncFsCmd  = 'encfsctl.exe'
+    else:
+        print 'WARNING: Unknown system "%s"' % (sSystem,)
+        # Don't quit -- command can be overriden by "--encfs-cmd".
+
+    sEncFSPath = ''
+    sEncFSMount = ''
+
+    aOptions, aRemainder = getopt.getopt(sys.argv[1:], 'h:m:p:v', ['dropbox-dir=',
+                                                                   'encfs-cmd=',
+                                                                   'encfs-mount-dir=',
+                                                                   'encfs-password=',
+                                                                   'help',
+                                                                   'verbose'
+                                                                  ])
+    for opt, arg in aOptions:
+        if opt in ('--dropbox-dir'):
+            sEncFSPath = arg
+        elif opt in ('--encfs-cmd'):
+            sEncFsCmd = arg
+        elif opt in ('-m', '--encfs-mount-dir'):
+            sEncFSMount = arg
+        elif opt in ('-p', '--encfs-password'):
+            sEncFsPwd = arg
+        elif opt in ('-h', '-?', '--help'):
+            print_help()
+        elif opt in ('-v', '--verbose'):
+            fVerbose = True
+        else:
+            print 'Unknown option "%s"' % (opt,)
+            print_help
+
+    if sEncFSPath == "":
+        print "ERROR: Missing Dropbox directory"
+        print_help()
+    elif sEncFSMount == "":
+        print "ERROR: Missing mounted EncFS directory"
+        print_help()
+
+    ## @todo Offer an "--encfs-password-file" option!
 
     ## @todo: Add language detection for non-English Dropboxes
     #sRegEx = ' \(In Konflikt stehende Kopie von.*'
