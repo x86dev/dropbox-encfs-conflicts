@@ -17,10 +17,13 @@ Dropbox automatically renames those conflicts. This unfortunately results in eit
 files and not seeing the conflicted files in your EncFS volume.
 
 This is what this script is for: It tries to resolve the conflicted files marked by Dropbox and
-re-integrates them into your EncFS volume without losing any files. 
+re-integrates them into your EncFS volume without losing any files.
 
 Tested on Windows only at the moment. At the time of writing this only is a plain Python script and
 does not offer any fancy user interface.
 
 Comments and ideas welcome!
+
+If you want to say "Thank you" for providing this script, I'd appreciate using my referal link
+http://db.tt/q9XZ2ylP when creating a new Dropbox account. Cheers!
 
