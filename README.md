@@ -25,5 +25,5 @@ does not offer any fancy user interface.
 Comments and ideas welcome!
 
 If you want to say "Thank you" for providing this script, I'd appreciate using my referal link
-http://db.tt/q9XZ2ylP when creating a new Dropbox account. Cheers!
+http://db.tt/lva6VCCl when creating a new Dropbox account. Cheers!
 
